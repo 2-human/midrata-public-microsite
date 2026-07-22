@@ -1,7 +1,11 @@
 /* Midrata microsite — brand system (derived from midrata.com, see brand/BRANDBOOK.md).
- * Black canvas, forest-green photography, Styrene-A-style uppercase grotesque, ghost CTAs.
- * Styrene A is licensed; Archivo is loaded as the free substitute per the brandbook. */
+ * Black canvas, forest-green photography, Styrene A uppercase grotesque, ghost CTAs.
+ * Uses the client's real Styrene A webfonts (self-hosted from midrata.com) + logo. */
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap');
+@font-face{font-family:'Styrene A';src:url('fonts/StyreneA-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Styrene A';src:url('fonts/StyreneA-Medium.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Styrene A';src:url('fonts/StyreneA-Bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Styrene A';src:url('fonts/StyreneA-Black.woff2') format('woff2');font-weight:800;font-style:normal;font-display:swap}
 
 :root{
   --ink:#000000; --paper:#FFFFFF;
@@ -44,11 +48,30 @@ strong{font-weight:600}
 /* ---- top bar ---- */
 .topbar{position:sticky;top:0;z-index:20;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-.wordmark{font-weight:700;letter-spacing:.22em;font-size:1.05rem;text-decoration:none}
-.nav{display:flex;gap:1.6rem}
-.nav a{font-size:.72rem;letter-spacing:.18em;text-decoration:none;color:var(--paper);opacity:.72}
-.nav a:hover{opacity:1}
-@media(max-width:640px){.nav{display:none}}
+.wordmark{display:flex;align-items:center;text-decoration:none}
+.logo-img{height:20px;width:auto;display:block;filter:brightness(0) invert(1)}
+.nav{display:flex;gap:.3rem;align-items:stretch}
+.nav-group{position:relative;display:flex}
+.nav-top{background:none;border:0;color:var(--paper);opacity:.72;font-family:var(--display);text-transform:uppercase;font-size:.72rem;letter-spacing:.18em;padding:.55rem .8rem;cursor:pointer}
+.nav-group:hover .nav-top,.nav-group:focus-within .nav-top{opacity:1}
+.nav-menu{display:none;position:absolute;top:100%;right:0;min-width:220px;background:#0a0a0a;border:1px solid var(--hair);padding:.35rem;z-index:30}
+.nav-group:hover .nav-menu,.nav-group:focus-within .nav-menu{display:block}
+.nav-menu a{display:block;text-decoration:none;color:var(--paper);opacity:.78;font-family:var(--display);text-transform:uppercase;font-size:.66rem;letter-spacing:.13em;padding:.55rem .65rem}
+.nav-menu a:hover{opacity:1;background:rgba(255,255,255,.06)}
+.nav-menu a.reserve{color:var(--fern)}
+@media(max-width:720px){
+  .topbar .wrap{height:auto;flex-wrap:wrap;padding-top:.6rem;padding-bottom:.6rem;row-gap:.3rem}
+  .nav{flex-wrap:wrap;gap:.2rem}
+  .nav-menu{position:static;display:block;border:0;padding:0 0 .3rem .7rem;min-width:0;background:none}
+  .nav-top{padding:.4rem .5rem}
+}
+
+/* real-photograph hero (generated forest imagery); scrim keeps white type legible */
+.hero--photo{background-color:#000;background-size:cover;background-position:center;background-repeat:no-repeat}
+.hero--photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.68) 0%,rgba(0,0,0,.22) 38%,rgba(0,0,0,.5) 68%,rgba(0,0,0,.96) 100%)}
+.figure{margin:2.4rem 0;border:1px solid var(--hair)}
+.figure img{width:100%;display:block}
+.figure figcaption{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);padding:.7rem .9rem;font-family:var(--display)}
 
 /* ---- hero (forest gradient scrim; swap for photography per brandbook) ---- */
 .hero{position:relative;min-height:78vh;display:flex;align-items:flex-end;
