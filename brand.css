@@ -50,6 +50,9 @@ strong{font-weight:600}
 .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
 .wordmark{display:flex;align-items:center;text-decoration:none}
 .logo-img{height:20px;width:auto;display:block;filter:brightness(0) invert(1)}
+.nav-link{font-family:var(--display);text-transform:uppercase;font-size:.72rem;letter-spacing:.18em;text-decoration:none;color:var(--paper);opacity:.72;padding:.55rem .55rem}
+.nav-link:hover{opacity:1}
+.nav-link.reserve{color:var(--fern)}
 .nav{display:flex;gap:.3rem;align-items:stretch}
 .nav-group{position:relative;display:flex}
 .nav-top{background:none;border:0;color:var(--paper);opacity:.72;font-family:var(--display);text-transform:uppercase;font-size:.72rem;letter-spacing:.18em;padding:.55rem .8rem;cursor:pointer}
