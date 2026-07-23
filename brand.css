@@ -171,9 +171,13 @@ html{scroll-behavior:smooth}
   .dock__form input{flex:1;width:auto;min-width:0}
 }
 
-/* ---- spotlight focus mode: dim the page, lift the reservation dock ---- */
-.dim{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:45;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s ease}
-.dim.on{opacity:1;visibility:visible}
-.dock{transition:box-shadow .28s ease,transform .28s ease}
-.dock.spot{box-shadow:0 -14px 50px rgba(0,0,0,.55),0 0 0 1px var(--fern) inset;transform:translateY(-2px)}
-.dock.spot .dock__msg b{color:var(--canopy)}
+/* ---- full-screen reservation overlay (opened by the CTA bar / Register) ---- */
+.overlay{position:fixed;inset:0;z-index:60;display:none;align-items:flex-start;justify-content:center;padding:6vh 1rem;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);overflow:auto}
+.overlay.on{display:flex}
+.overlay__panel{position:relative;background:var(--paper);color:var(--ink);width:100%;max-width:440px;padding:2.1rem clamp(1.2rem,4vw,2rem) 1.6rem;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+.overlay__panel .eyebrow{color:var(--canopy)}
+.overlay__title{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:1.3rem;line-height:1.1;margin:0 0 1rem;color:var(--ink)}
+.overlay__panel .reserve{max-width:none}
+.overlay__close{position:absolute;top:.5rem;right:.6rem;background:none;border:0;color:#a3a39a;font-size:.95rem;line-height:1;cursor:pointer;padding:.45rem;opacity:.7;transition:opacity .15s,color .15s}
+.overlay__close:hover{opacity:1;color:var(--ink)}
+body.modal-open{overflow:hidden}

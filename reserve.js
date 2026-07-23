@@ -1,69 +1,76 @@
-/* Sticky bottom reservation dock (compliance: no sale, no price, no promised return).
- * The form is always visible at the bottom. Clicking "Register" (or any
- * [data-register]/[data-reserve] CTA) or focusing a field enters SPOTLIGHT mode:
- * the page dims behind a backdrop and the form is lifted above it. Clicking the
- * backdrop, pressing Escape, or submitting exits. Submit shows a thank-you state.
+/* Reservation flow (compliance: no sale, no price, no promised return).
+ * A slim CTA bar is docked at the bottom of every page. Clicking its "Join early
+ * access" button — or the nav "Register" button, or any [data-register]/[data-reserve]
+ * CTA — opens the FULL form as a full-screen overlay. Close via the small top-right X,
+ * a backdrop click, or Escape. Submit shows a thank-you state.
  * No backend here — a real deployment posts to the lead store with the ad-set UTM. */
 (function () {
-  function dock() { return document.querySelector('.dock'); }
+  var overlay = null;
 
-  // backdrop (created once; sits below the dock, above everything else)
-  var dim = null;
-  function backdrop() {
-    if (dim) return dim;
-    dim = document.createElement('div');
-    dim.className = 'dim';
-    dim.addEventListener('click', deactivate);
-    document.body.appendChild(dim);
-    return dim;
+  var FORM = ''
+    + '<div class="overlay__panel" data-reserve-body role="document">'
+    +   '<button class="overlay__close" type="button" aria-label="Close">✕</button>'
+    +   '<p class="eyebrow">Early access</p>'
+    +   '<h3 class="overlay__title">Reserve your place</h3>'
+    +   '<div class="notice"><b>Midrata isn’t available in your area yet.</b> Membership requires securities registration we’re completing now. Join the early-access list and we’ll notify you the moment it opens. Nothing is charged today, and no account is created.</div>'
+    +   '<form class="reserve">'
+    +     '<label>Full name</label><input required placeholder="Your name">'
+    +     '<label>Email</label><input type="email" required placeholder="you@email.com">'
+    +     '<label>Phone (optional)</label><input placeholder="(555) 000-0000">'
+    +     '<label>How likely are you to join when it opens?</label>'
+    +     '<select><option>Very likely</option><option>Somewhat likely</option><option>Just exploring</option></select>'
+    +     '<label>If you did join, what annual amount might you consider?</label>'
+    +     '<select><option>Under $5,000</option><option>$5,000–$10,000</option><option>$10,000–$25,000</option><option>$25,000–$50,000</option><option>$50,000 or more</option></select>'
+    +     '<button class="ghost" type="submit">Join early access</button>'
+    +     '<p class="finelegal">By joining you agree to be contacted by Midrata about early access. This is not an offer to sell or a solicitation to buy a security, and no return is promised. Final wording is subject to legal review.</p>'
+    +   '</form>'
+    + '</div>';
+
+  function build() {
+    overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.id = 'reserve-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Reserve your place');
+    overlay.innerHTML = FORM;
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    wireClose();
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+  function ov() { return overlay || build(); }
+  function wireClose() {
+    var x = overlay.querySelector('.overlay__close');
+    if (x) x.addEventListener('click', close);
+  }
+  function open() {
+    var o = ov();
+    o.classList.add('on');
+    document.body.classList.add('modal-open');
+    var f = o.querySelector('input, select'); if (f) setTimeout(function () { f.focus(); }, 40);
+  }
+  function close() {
+    if (overlay) { overlay.classList.remove('on'); document.body.classList.remove('modal-open'); }
   }
 
-  function pad() { var d = dock(); if (d) document.body.style.paddingBottom = (d.offsetHeight + 6) + 'px'; }
+  function pad() { var d = document.querySelector('.dock'); if (d) document.body.style.paddingBottom = (d.offsetHeight + 6) + 'px'; }
 
-  function activate() {
-    var d = dock(); if (!d) return;
-    backdrop().classList.add('on');
-    d.classList.add('spot');
-  }
-  function deactivate() {
-    var d = dock();
-    if (dim) dim.classList.remove('on');
-    if (d) d.classList.remove('spot');
-    var a = document.activeElement;
-    if (a && d && d.contains(a) && a.blur) a.blur();
-  }
-  function focusDock() {
-    var d = dock(); if (!d) return;
-    activate();
-    var i = d.querySelector('input, select'); if (i) i.focus({ preventScroll: true });
-  }
-
-  // CTA buttons / links that should open the form
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-register],[data-reserve]');
-    if (t) { e.preventDefault(); focusDock(); }
+    if (t) { e.preventDefault(); open(); }
   });
-
-  // focusing any dock field enters spotlight
-  document.addEventListener('focusin', function (e) {
-    var d = dock(); if (d && d.contains(e.target)) activate();
-  });
-  // leaving the dock (focus moved elsewhere) exits spotlight
-  document.addEventListener('focusout', function (e) {
-    var d = dock(); if (!d) return;
-    setTimeout(function () { if (!d.contains(document.activeElement)) deactivate(); }, 0);
-  });
-  // Escape exits
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') deactivate(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
 
   document.addEventListener('submit', function (e) {
     var f = e.target.closest('.reserve'); if (!f) return;
     e.preventDefault();
     var body = f.closest('[data-reserve-body]') || f.parentNode;
-    body.innerHTML = '<div class="dock__msg"><b>You’re on the list</b>'
-      + '<span class="fine">Thank you. We’ll notify you the moment early access opens. Nothing was charged, and no account was created.</span></div>';
-    deactivate();
-    pad();
+    body.innerHTML = '<button class="overlay__close" type="button" aria-label="Close">✕</button>'
+      + '<p class="eyebrow">You’re on the list</p>'
+      + '<h3 class="overlay__title">Thank you</h3>'
+      + '<p>We’ll notify you the moment early access opens. Nothing was charged, and no account was created.</p>';
+    var x = body.querySelector('.overlay__close'); if (x) x.addEventListener('click', close);
   });
 
   window.addEventListener('load', pad);
