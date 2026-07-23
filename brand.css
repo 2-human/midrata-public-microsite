@@ -170,3 +170,10 @@ html{scroll-behavior:smooth}
   .dock__msg .fine{display:none}
   .dock__form input{flex:1;width:auto;min-width:0}
 }
+
+/* ---- spotlight focus mode: dim the page, lift the reservation dock ---- */
+.dim{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);z-index:45;opacity:0;visibility:hidden;transition:opacity .28s ease,visibility .28s ease}
+.dim.on{opacity:1;visibility:visible}
+.dock{transition:box-shadow .28s ease,transform .28s ease}
+.dock.spot{box-shadow:0 -14px 50px rgba(0,0,0,.55),0 0 0 1px var(--fern) inset;transform:translateY(-2px)}
+.dock.spot .dock__msg b{color:var(--canopy)}
