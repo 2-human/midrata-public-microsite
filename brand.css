@@ -72,7 +72,7 @@ strong{font-weight:600}
 /* real-photograph hero (generated forest imagery); scrim keeps white type legible */
 .hero--photo{background-color:#000;background-size:cover;background-position:center;background-repeat:no-repeat}
 .hero--photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,0,0,.68) 0%,rgba(0,0,0,.22) 38%,rgba(0,0,0,.5) 68%,rgba(0,0,0,.96) 100%)}
-.figure{margin:2.4rem 0;border:1px solid var(--hair)}
+.figure{margin:2.4rem auto;border:1px solid var(--hair)}
 .figure img{width:100%;display:block}
 .figure figcaption{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stone);padding:.7rem .9rem;font-family:var(--display)}
 
